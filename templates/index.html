@@ -26,16 +26,26 @@
     </div>
 
     <script>
-        async def clearAlert(mac) {
-            await fetch('/api/clear_alert', {
+    // ฟังก์ชันสำหรับกดเคลียร์คิว
+    async function clearAlert(mac) {
+        try {
+            const response = await fetch('/api/clear_alert', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({mac_address: mac})
             });
-            location.reload(); // รีเฟรชหน้าจอ
+            if (response.ok) {
+                location.reload(); // ถ้าลบสำเร็จ ให้รีเฟรชหน้าจอทันที
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-        // รีเฟรชหน้าจอทุกๆ 5 วินาทีเพื่อดูคิวใหม่
-        setInterval(() => { location.reload(); }, 5000);
-    </script>
+    }
+
+    // รีเฟรชหน้าจออัตโนมัติทุกๆ 3 วินาที เพื่ออัปเดตสถานะจาก ESP32 ตัวอื่นๆ
+    setInterval(() => {
+        location.reload();
+    }, 3000);
+</script>
 </body>
 </html>
