@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Andon Cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
+        .card { background: white; padding: 20px; margin: 20px auto; width: 80%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .alert-box { background: #ff4d4d; color: white; padding: 15px; margin: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        button { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <h1>📦 Smart Andon Dashboard (Cloud)</h1>
+    <div class="card">
+        <h2>รายการเครื่องที่รออะไหล่</h2>
+        <div id="alert-list">
+            {% for mac in alerts %}
+            <div class="alert-box">
+                <span>Machine: <strong>{{ mac }}</strong></span>
+                <button onclick="clearAlert('{{ mac }}')">ของส่งแล้ว ✅</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        async def clearAlert(mac) {
+            await fetch('/api/clear_alert', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({mac_address: mac})
+            });
+            location.reload(); // รีเฟรชหน้าจอ
+        }
+        // รีเฟรชหน้าจอทุกๆ 5 วินาทีเพื่อดูคิวใหม่
+        setInterval(() => { location.reload(); }, 5000);
+    </script>
+</body>
+</html>
